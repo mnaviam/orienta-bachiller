@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-slate-50 text-slate-800">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}OrientaBachiller | Sistema de Orientación Vocacional Universitaria{% endblock %}</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        },
+                        accent: {
+                            500: '#06b6d4',
+                            600: '#0891b2',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="flex flex-col min-h-full font-sans antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- Header / Barra de Navegación -->
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <a href="{{ url_for('main.home') }}" class="flex items-center gap-3 group">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-brand-600 to-accent-500 flex items-center justify-center text-white shadow-md shadow-brand-500/20 group-hover:scale-105 transition-transform duration-200">
+                        <i class="fa-solid fa-graduation-cap text-xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-extrabold bg-gradient-to-r from-brand-700 to-accent-600 bg-clip-text text-transparent">OrientaBachiller</span>
+                        <span class="block text-[11px] font-semibold text-slate-500 -mt-1 tracking-wide">GUÍA VOCACIONAL BGU • ECUADOR</span>
+                    </div>
+                </a>
+
+                <!-- Navegación Escritorio -->
+                <nav class="hidden md:flex items-center gap-1">
+                    <a href="{{ url_for('main.home') }}" class="px-3 py-2 text-sm font-semibold rounded-lg text-slate-700 hover:text-brand-600 hover:bg-slate-100 transition-colors">
+                        <i class="fa-solid fa-house text-slate-400 mr-1.5"></i>Inicio
+                    </a>
+                    <a href="{{ url_for('main.careers_list') }}" class="px-3 py-2 text-sm font-semibold rounded-lg text-slate-700 hover:text-brand-600 hover:bg-slate-100 transition-colors">
+                        <i class="fa-solid fa-compass text-slate-400 mr-1.5"></i>Catálogo de Carreras
+                    </a>
+                    <a href="{{ url_for('main.compare_careers') }}" class="px-3 py-2 text-sm font-semibold rounded-lg text-slate-700 hover:text-brand-600 hover:bg-slate-100 transition-colors">
+                        <i class="fa-solid fa-code-compare text-slate-400 mr-1.5"></i>Comparador
+                    </a>
+                    <a href="{{ url_for('main.guide') }}" class="px-3 py-2 text-sm font-semibold rounded-lg text-slate-700 hover:text-brand-600 hover:bg-slate-100 transition-colors">
+                        <i class="fa-solid fa-book-open text-slate-400 mr-1.5"></i>Guía BGU Ecuador
+                    </a>
+                    <a href="{{ url_for('result.search_result') }}" class="px-3 py-2 text-sm font-semibold rounded-lg text-slate-700 hover:text-brand-600 hover:bg-slate-100 transition-colors">
+                        <i class="fa-solid fa-magnifying-glass text-slate-400 mr-1.5"></i>Consultar Test
+                    </a>
+                </nav>
+
+                <!-- Botones de Acción -->
+                <div class="flex items-center gap-3">
+                    <a href="{{ url_for('admin.dashboard') }}" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors" title="Panel para orientadores del DECE">
+                        <i class="fa-solid fa-chart-pie text-brand-600"></i>
+                        <span>Panel DECE / Orientador</span>
+                    </a>
+
+                    <a href="{{ url_for('test.start_test') }}" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-white bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 rounded-xl shadow-md shadow-brand-600/25 hover:shadow-lg hover:shadow-brand-600/35 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150">
+                        <i class="fa-solid fa-play text-xs"></i>
+                        <span>Hacer Test Vocacional</span>
+                    </a>
+
+                    <!-- Botón Menú Móvil -->
+                    <button type="button" id="mobile-menu-btn" class="md:hidden p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menú Móvil Desplegable -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-2">
+            <a href="{{ url_for('main.home') }}" class="block px-3 py-2.5 rounded-lg text-base font-semibold text-slate-700 hover:bg-slate-100">
+                <i class="fa-solid fa-house w-6 text-brand-600"></i>Inicio
+            </a>
+            <a href="{{ url_for('main.careers_list') }}" class="block px-3 py-2.5 rounded-lg text-base font-semibold text-slate-700 hover:bg-slate-100">
+                <i class="fa-solid fa-compass w-6 text-brand-600"></i>Catálogo de Carreras
+            </a>
+            <a href="{{ url_for('main.compare_careers') }}" class="block px-3 py-2.5 rounded-lg text-base font-semibold text-slate-700 hover:bg-slate-100">
+                <i class="fa-solid fa-code-compare w-6 text-brand-600"></i>Comparador de Carreras
+            </a>
+            <a href="{{ url_for('main.guide') }}" class="block px-3 py-2.5 rounded-lg text-base font-semibold text-slate-700 hover:bg-slate-100">
+                <i class="fa-solid fa-book-open w-6 text-brand-600"></i>Guía para Bachilleres
+            </a>
+            <a href="{{ url_for('result.search_result') }}" class="block px-3 py-2.5 rounded-lg text-base font-semibold text-slate-700 hover:bg-slate-100">
+                <i class="fa-solid fa-magnifying-glass w-6 text-brand-600"></i>Consultar Mi Resultado
+            </a>
+            <a href="{{ url_for('admin.dashboard') }}" class="block px-3 py-2.5 rounded-lg text-base font-semibold text-slate-700 hover:bg-slate-100">
+                <i class="fa-solid fa-chart-pie w-6 text-brand-600"></i>Panel Orientador
+            </a>
+        </div>
+    </header>
+
+    <!-- Notificaciones / Flash Messages -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 w-full">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="p-4 mb-4 rounded-xl text-sm font-medium flex items-center justify-between shadow-sm animate-fade-in
+                        {% if category == 'danger' %} bg-red-50 text-red-800 border border-red-200
+                        {% elif category == 'warning' %} bg-amber-50 text-amber-800 border border-amber-200
+                        {% elif category == 'success' %} bg-emerald-50 text-emerald-800 border border-emerald-200
+                        {% else %} bg-blue-50 text-blue-800 border border-blue-200 {% endif %}">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid 
+                                {% if category == 'danger' %} fa-circle-exclamation text-red-500
+                                {% elif category == 'warning' %} fa-triangle-exclamation text-amber-500
+                                {% elif category == 'success' %} fa-circle-check text-emerald-500
+                                {% else %} fa-circle-info text-blue-500 {% endif %} text-lg"></i>
+                            <span>{{ message }}</span>
+                        </div>
+                        <button type="button" onclick="this.parentElement.remove()" class="text-slate-400 hover:text-slate-600">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Contenido Principal -->
+    <main class="flex-grow">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Pie de Página -->
+    <footer class="bg-slate-900 text-slate-400 pt-16 pb-12 mt-20 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-slate-800">
+                <!-- Columna 1: Info -->
+                <div class="md:col-span-1 space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-500 to-accent-500 flex items-center justify-center text-white font-bold">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <span class="text-xl font-bold text-white tracking-tight">OrientaBachiller</span>
+                    </div>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Plataforma inteligente de orientación vocacional con arquitectura MVC, diseñada para guiar a estudiantes que están por terminar la secundaria hacia su profesión ideal.
+                    </p>
+                    <div class="flex items-center gap-3 text-slate-400">
+                        <span class="text-xs bg-slate-800 px-3 py-1 rounded-full border border-slate-700 text-slate-300">
+                            <i class="fa-solid fa-shield-halved mr-1 text-accent-500"></i> Modelo Holland RIASEC
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Columna 2: Enlaces Rápidos -->
+                <div>
+                    <h4 class="text-white font-bold text-sm tracking-wider uppercase mb-4">Herramientas</h4>
+                    <ul class="space-y-2.5 text-sm">
+                        <li><a href="{{ url_for('test.start_test') }}" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-solid fa-chevron-right text-xs text-brand-500"></i> Test de Preferencias y Habilidades</a></li>
+                        <li><a href="{{ url_for('main.careers_list') }}" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-solid fa-chevron-right text-xs text-brand-500"></i> Catálogo Completo de Carreras</a></li>
+                        <li><a href="{{ url_for('main.compare_careers') }}" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-solid fa-chevron-right text-xs text-brand-500"></i> Comparador de Carreras</a></li>
+                        <li><a href="{{ url_for('result.search_result') }}" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-solid fa-chevron-right text-xs text-brand-500"></i> Recuperar mi Resultado</a></li>
+                    </ul>
+                </div>
+
+                <!-- Columna 3: Consejería & Guía -->
+                <div>
+                    <h4 class="text-white font-bold text-sm tracking-wider uppercase mb-4">Orientación</h4>
+                    <ul class="space-y-2.5 text-sm">
+                        <li><a href="{{ url_for('main.guide') }}" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-solid fa-chevron-right text-xs text-brand-500"></i> Guía para Elegir Carrera</a></li>
+                        <li><a href="{{ url_for('admin.dashboard') }}" class="hover:text-white transition-colors flex items-center gap-2"><i class="fa-solid fa-chevron-right text-xs text-brand-500"></i> Panel para Consejeros Escolares</a></li>
+                        <li><span class="text-slate-400 flex items-center gap-2"><i class="fa-solid fa-check text-xs text-accent-500"></i> Arquitectura Modelo-Vista-Controlador</span></li>
+                    </ul>
+                </div>
+
+                <!-- Columna 4: Mensaje para Bachilleres -->
+                <div class="space-y-3">
+                    <h4 class="text-white font-bold text-sm tracking-wider uppercase mb-4">Tu Futuro Importa</h4>
+                    <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700/60">
+                        <p class="text-xs text-slate-300 italic leading-relaxed">
+                            "Elegir carrera no es encontrar la profesión perfecta, sino descubrir el camino donde tus talentos y pasiones se encuentren con las necesidades del mundo."
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-4">
+                <p>&copy; 2026 OrientaBachiller. Sistema de Asesoría Vocacional Universitaria.</p>
+                <p class="flex items-center gap-2">
+                    <span>Desarrollado bajo arquitectura <strong class="text-slate-300">MVC</strong></span>
+                    <span>•</span>
+                    <span class="text-brand-400 font-medium">Python / Flask + SQLite</span>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script Menú Móvil -->
+    <script>
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        if (btn && menu) {
+            btn.addEventListener('click', () => {
+                menu.classList.toggle('hidden');
+            });
+        }
+    </script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}Comparador de Carreras Universitarias | OrientaBachiller{% endblock %}
+
+{% block content %}
+<!-- Cabecera del Comparador -->
+<div class="bg-mesh-gradient py-12 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-100 text-brand-700 text-xs font-bold uppercase tracking-wider">
+            <i class="fa-solid fa-code-compare"></i> Herramienta de Decisión
+        </span>
+        <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">Comparador de Carreras</h1>
+        <p class="text-base text-slate-600 max-w-2xl mx-auto">
+            ¿Indeciso entre dos o tres opciones? Compara cara a cara la duración, habilidades exigidas, campo laboral y enfoque vocacional.
+        </p>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+    
+    <!-- Selectores de Carreras -->
+    <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-xs">
+        <h2 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4">Selecciona las carreras a comparar:</h2>
+        
+        <form action="{{ url_for('main.compare_careers') }}" method="GET" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            
+            <!-- Carrera 1 -->
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1.5">Carrera 1:</label>
+                <select name="c1" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold text-slate-800 focus:border-brand-500 focus:ring-2 focus:ring-brand-200">
+                    <option value="">-- Seleccionar carrera --</option>
+                    {% for c in all_careers %}
+                    <option value="{{ c.id }}" {% if selected_ids|length > 0 and selected_ids[0] == c.id %}selected{% endif %}>
+                        {{ c.name }} ({{ c.category }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Carrera 2 -->
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1.5">Carrera 2:</label>
+                <select name="c2" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold text-slate-800 focus:border-brand-500 focus:ring-2 focus:ring-brand-200">
+                    <option value="">-- Seleccionar carrera --</option>
+                    {% for c in all_careers %}
+                    <option value="{{ c.id }}" {% if selected_ids|length > 1 and selected_ids[1] == c.id %}selected{% endif %}>
+                        {{ c.name }} ({{ c.category }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Carrera 3 (Opcional) -->
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1.5">Carrera 3 (Opcional):</label>
+                <select name="c3" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold text-slate-800 focus:border-brand-500 focus:ring-2 focus:ring-brand-200">
+                    <option value="">-- Ninguna / Opcional --</option>
+                    {% for c in all_careers %}
+                    <option value="{{ c.id }}" {% if selected_ids|length > 2 and selected_ids[2] == c.id %}selected{% endif %}>
+                        {{ c.name }} ({{ c.category }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="sm:col-span-3 flex justify-end pt-2">
+                <button type="submit" class="px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-brand-600 text-white font-bold text-xs shadow-xs transition-colors">
+                    <i class="fa-solid fa-arrows-rotate mr-1.5"></i> Actualizar Comparación
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Tabla Comparativa -->
+    {% if selected_careers %}
+    <div class="bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden">
+        
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50 border-b border-slate-200">
+                        <th class="p-5 text-xs font-extrabold text-slate-400 uppercase tracking-wider w-1/4">Aspecto</th>
+                        {% for sc in selected_careers %}
+                        <th class="p-5 text-base font-extrabold text-slate-900 border-l border-slate-200">
+                            <div class="flex items-center gap-2">
+                                <i class="{{ sc.icon }} text-brand-600 text-lg"></i>
+                                <span>{{ sc.name }}</span>
+                            </div>
+                            <span class="inline-block mt-1 text-[11px] font-bold px-2 py-0.5 rounded-md bg-slate-200 text-slate-700">
+                                {{ sc.category }}
+                            </span>
+                        </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-xs">
+                    
+                    <!-- Título Otorgado -->
+                    <tr>
+                        <td class="p-5 font-bold text-slate-700 bg-slate-50/50">Título Otorgado</td>
+                        {% for sc in selected_careers %}
+                        <td class="p-5 text-slate-800 font-semibold border-l border-slate-100">
+                            {{ sc.degree_title }}
+                        </td>
+                        {% endfor %}
+                    </tr>
+
+                    <!-- Duración -->
+                    <tr>
+                        <td class="p-5 font-bold text-slate-700 bg-slate-50/50">Duración Típica</td>
+                        {% for sc in selected_careers %}
+                        <td class="p-5 text-slate-800 font-bold border-l border-slate-100">
+                            <i class="fa-regular fa-clock text-slate-400 mr-1"></i>
+                            {{ sc.duration_semesters }} Semestres (~{{ sc.duration_semesters // 2 }} años)
+                        </td>
+                        {% endfor %}
+                    </tr>
+
+                    <!-- Resumen -->
+                    <tr>
+                        <td class="p-5 font-bold text-slate-700 bg-slate-50/50">Enfoque Principal</td>
+                        {% for sc in selected_careers %}
+                        <td class="p-5 text-slate-600 leading-relaxed border-l border-slate-100">
+                            {{ sc.short_description }}
+                        </td>
+                        {% endfor %}
+                    </tr>
+
+                    <!-- Habilidades Clave -->
+                    <tr>
+                        <td class="p-5 font-bold text-slate-700 bg-slate-50/50">Habilidades Clave</td>
+                        {% for sc in selected_careers %}
+                        <td class="p-5 border-l border-slate-100">
+                            <div class="flex flex-wrap gap-1.5">
+                                {% for sk in sc.key_skills %}
+                                <span class="bg-indigo-50 text-indigo-700 px-2 py-1 rounded-md font-semibold text-[11px]">
+                                    {{ sk }}
+                                </span>
+                                {% endfor %}
+                            </div>
+                        </td>
+                        {% endfor %}
+                    </tr>
+
+                    <!-- Salidas Laborales -->
+                    <tr>
+                        <td class="p-5 font-bold text-slate-700 bg-slate-50/50">Campo Laboral</td>
+                        {% for sc in selected_careers %}
+                        <td class="p-5 border-l border-slate-100">
+                            <ul class="space-y-1.5 list-disc list-inside text-slate-700">
+                                {% for j in sc.labor_market %}
+                                <li>{{ j }}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        {% endfor %}
+                    </tr>
+
+                    <!-- Acciones -->
+                    <tr class="bg-slate-50">
+                        <td class="p-5 font-bold text-slate-700">Acción</td>
+                        {% for sc in selected_careers %}
+                        <td class="p-5 border-l border-slate-200">
+                            <a href="{{ url_for('main.career_detail', slug=sc.slug) }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs shadow-xs transition-colors">
+                                Ver Ficha Completa <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </a>
+                        </td>
+                        {% endfor %}
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block title %}Panel de Orientación Escolar | OrientaBachiller{% endblock %}
+
+{% block content %}
+<div class="bg-mesh-gradient py-10 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="space-y-1">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-100 text-brand-700 text-xs font-bold uppercase tracking-wider">
+                    <i class="fa-solid fa-chart-pie"></i> Consejería Estudiantil (DECE) • Bachillerato Ecuador
+                </div>
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Panel de Orientación Vocacional Escolar</h1>
+                <p class="text-xs sm:text-sm text-slate-600">Monitoreo psicométrico de intereses y aptitudes en estudiantes de Bachillerato General Unificado (BGU).</p>
+            </div>
+            <div>
+                <a href="{{ url_for('test.start_test') }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs shadow-md shadow-brand-600/20 transition-all">
+                    <i class="fa-solid fa-plus"></i> Evaluar Nuevo Estudiante
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
+
+    <!-- Tarjetas de Métricas (KPIs) -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        
+        <div class="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-xs flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center text-2xl font-bold">
+                <i class="fa-solid fa-users"></i>
+            </div>
+            <div>
+                <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Bachilleres Evaluados</div>
+                <div class="text-3xl font-extrabold text-slate-900">{{ stats.total_tests }}</div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-xs flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl font-bold">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <div>
+                <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Carreras en Catálogo</div>
+                <div class="text-3xl font-extrabold text-slate-900">{{ total_careers }}</div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-xs flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl font-bold">
+                <i class="fa-solid fa-award"></i>
+            </div>
+            <div>
+                <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Perfil Más Frecuente</div>
+                <div class="text-sm font-extrabold text-slate-800 line-clamp-1">
+                    {{ stats.profiles[0].dominant_profile if stats.profiles else 'Sin datos aún' }}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Distribución de Perfiles y Colegios -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        <!-- Perfiles RIASEC Más Frecuentes -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-xs space-y-4">
+            <h3 class="font-bold text-slate-900 text-sm uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                <i class="fa-solid fa-chart-column text-brand-600"></i> Distribución de Arquetipos Vocacionales
+            </h3>
+            
+            {% if stats.profiles %}
+            <div class="space-y-3 pt-2">
+                {% for p in stats.profiles %}
+                <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100 text-xs">
+                    <span class="font-bold text-slate-800">{{ p.dominant_profile }}</span>
+                    <span class="px-2.5 py-1 rounded-lg bg-brand-100 text-brand-700 font-extrabold">{{ p.count }} estudiantes</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-xs text-slate-400 py-6 text-center">Aún no hay tests completados para mostrar estadísticas.</p>
+            {% endif %}
+        </div>
+
+        <!-- Colegios / Instituciones Más Activas -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-xs space-y-4">
+            <h3 class="font-bold text-slate-900 text-sm uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                <i class="fa-solid fa-school text-accent-600"></i> Instituciones Educativas con Evaluaciones
+            </h3>
+
+            {% if stats.top_schools %}
+            <div class="space-y-3 pt-2">
+                {% for s in stats.top_schools %}
+                <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100 text-xs">
+                    <span class="font-bold text-slate-800">{{ s.student_school }}</span>
+                    <span class="px-2.5 py-1 rounded-lg bg-accent-100 text-accent-800 font-extrabold">{{ s.count }} evaluaciones</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-xs text-slate-400 py-6 text-center">Aún no se registran nombres de instituciones.</p>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <!-- Evaluaciones Recientes -->
+    <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-xs space-y-4">
+        <h3 class="font-bold text-slate-900 text-sm uppercase tracking-wider text-slate-400 flex items-center gap-2">
+            <i class="fa-solid fa-clock-rotate-left text-brand-600"></i> Últimas Evaluaciones Realizadas
+        </h3>
+
+        {% if recent_tests %}
+        <div class="overflow-x-auto pt-2">
+            <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                    <tr class="border-b border-slate-200 text-slate-400 uppercase font-extrabold">
+                        <th class="pb-3">Código</th>
+                        <th class="pb-3">Estudiante (Bachiller)</th>
+                        <th class="pb-3">Unidad Educativa / Curso BGU</th>
+                        <th class="pb-3">Arquetipo Dominante</th>
+                        <th class="pb-3">Fecha</th>
+                        <th class="pb-3 text-right">Acción</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% for t in recent_tests %}
+                    <tr class="hover:bg-slate-50/80 transition-colors">
+                        <td class="py-3.5 font-mono font-bold text-indigo-600">{{ t.code }}</td>
+                        <td class="py-3.5 font-bold text-slate-900">{{ t.student_name }}</td>
+                        <td class="py-3.5 text-slate-500">
+                            {{ t.student_school or 'U.E. No especificada' }} 
+                            {% if t.student_grade %}<span class="text-slate-400">({{ t.student_grade }})</span>{% endif %}
+                        </td>
+                        <td class="py-3.5">
+                            <span class="inline-block px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 font-semibold">
+                                {{ t.dominant_profile }}
+                            </span>
+                        </td>
+                        <td class="py-3.5 text-slate-400">{{ t.created_at[:16] }}</td>
+                        <td class="py-3.5 text-right">
+                            <a href="{{ url_for('result.view_result', code_or_id=t.code) }}" class="inline-flex items-center gap-1 font-bold text-brand-600 hover:text-brand-700">
+                                Ver Informe <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-xs text-slate-400 py-6 text-center">No hay evaluaciones registradas recientemente.</p>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

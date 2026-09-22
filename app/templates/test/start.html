@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Iniciar Test Vocacional | OrientaBachiller{% endblock %}
+
+{% block content %}
+<div class="bg-mesh-gradient py-12 border-b border-slate-200">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-100 text-brand-700 text-xs font-bold uppercase tracking-wider">
+            <i class="fa-solid fa-clipboard-user"></i> Paso 1 de 3: Identificación
+        </span>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Tu Primer Paso Hacia la Universidad</h1>
+        <p class="text-sm sm:text-base text-slate-600 max-w-xl mx-auto">
+            Completa estos datos básicos para personalizar tu informe vocacional y entregarte recomendaciones precisas.
+        </p>
+    </div>
+</div>
+
+<div class="max-w-xl mx-auto px-4 sm:px-6 py-12">
+    <div class="bg-white rounded-3xl p-8 sm:p-10 border border-slate-200/90 shadow-xl space-y-8">
+        
+        <div class="flex items-center gap-4 pb-6 border-b border-slate-100">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-600 to-indigo-600 text-white flex items-center justify-center text-xl font-bold shadow-md shadow-brand-500/20">
+                <i class="fa-solid fa-id-card"></i>
+            </div>
+            <div>
+                <h2 class="text-xl font-bold text-slate-800">Datos del Estudiante</h2>
+                <p class="text-xs text-slate-500">La información se utilizará para generar tu reporte final.</p>
+            </div>
+        </div>
+
+        <form action="{{ url_for('test.start_test') }}" method="POST" class="space-y-6">
+            
+            <!-- Nombre Completo -->
+            <div>
+                <label for="student_name" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                    Nombre Completo <span class="text-rose-500">*</span>
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <input type="text" name="student_name" id="student_name" required placeholder="Ej. Camila Morales"
+                        class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 text-sm font-medium text-slate-800 transition-all">
+                </div>
+            </div>
+
+            <!-- Colegio / Unidad Educativa -->
+            <div>
+                <label for="student_school" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                    Unidad Educativa / Colegio (Ecuador)
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-school"></i>
+                    </div>
+                    <input type="text" name="student_school" id="student_school" placeholder="Ej. U.E. Fiscal Mejía / U.E. Vicente Rocafuerte"
+                        class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 text-sm font-medium text-slate-800 transition-all">
+                </div>
+            </div>
+
+            <!-- Nivel / Curso en Ecuador y Edad -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label for="student_grade" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                        Nivel de Bachillerato (BGU)
+                    </label>
+                    <select name="student_grade" id="student_grade" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 text-sm font-medium text-slate-800 transition-all">
+                        <option value="3.° de Bachillerato (3ero BGU - Graduando)">3.° de Bachillerato (3ero BGU - Graduando)</option>
+                        <option value="2.° de Bachillerato (2do BGU)">2.° de Bachillerato (2do BGU)</option>
+                        <option value="1.° de Bachillerato (1ero BGU)">1.° de Bachillerato (1ero BGU)</option>
+                        <option value="Bachillerato Técnico (BT)">Bachillerato Técnico (BT)</option>
+                        <option value="Bachillerato Internacional (BI)">Bachillerato Internacional (BI)</option>
+                        <option value="Bachiller Graduado (Aspirante SENESCYT / Universidad)">Bachiller Graduado (Aspirante SENESCYT / Universidad)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="student_age" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                        Edad
+                    </label>
+                    <input type="number" name="student_age" id="student_age" min="13" max="25" value="17"
+                        class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 text-sm font-medium text-slate-800 transition-all">
+                </div>
+            </div>
+
+            <!-- Correo Opcional -->
+            <div>
+                <label for="student_email" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                    Correo Electrónico (Opcional)
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-envelope"></i>
+                    </div>
+                    <input type="email" name="student_email" id="student_email" placeholder="ejemplo@correo.com"
+                        class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 text-sm font-medium text-slate-800 transition-all">
+                </div>
+                <p class="text-[11px] text-slate-500 mt-1">Para recibir una copia de tu informe si lo deseas.</p>
+            </div>
+
+            <!-- Instrucciones Clave -->
+            <div class="p-4 rounded-2xl bg-amber-50/80 border border-amber-200/80 text-amber-900 text-xs space-y-1.5">
+                <div class="font-bold flex items-center gap-1.5">
+                    <i class="fa-solid fa-lightbulb text-amber-600"></i> Recuerda:
+                </div>
+                <p class="leading-relaxed text-amber-800">
+                    No hay respuestas buenas ni malas. Responde con total honestidad según lo que realmente te gusta y sabes hacer, no lo que crees que otros esperan de ti.
+                </p>
+            </div>
+
+            <button type="submit" class="w-full py-4 rounded-2xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 text-white font-extrabold text-base shadow-lg shadow-brand-600/30 hover:shadow-xl transition-all">
+                <span>Comenzar el Cuestionario</span>
+                <i class="fa-solid fa-arrow-right ml-2 text-sm"></i>
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

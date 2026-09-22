@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+
+{% block title %}Resultados Vocacionales de {{ result.student_name }} | OrientaBachiller{% endblock %}
+
+{% block content %}
+<!-- Cabecera de Resultados -->
+<div class="bg-mesh-gradient py-12 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="space-y-2">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-wider">
+                    <i class="fa-solid fa-circle-check"></i> Diagnóstico Vocacional Completado
+                </div>
+                <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                    Informe Vocacional: <span class="text-brand-600">{{ result.student_name }}</span>
+                </h1>
+                <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500 font-medium">
+                    {% if result.student_school %}
+                    <span><i class="fa-solid fa-school text-slate-400 mr-1"></i>{{ result.student_school }}</span>
+                    <span>•</span>
+                    {% endif %}
+                    {% if result.student_grade %}
+                    <span><i class="fa-solid fa-layer-group text-slate-400 mr-1"></i>{{ result.student_grade }}</span>
+                    <span>•</span>
+                    {% endif %}
+                    <span><i class="fa-solid fa-fingerprint text-slate-400 mr-1"></i>Código: <strong class="text-slate-700">{{ result.code }}</strong></span>
+                </div>
+            </div>
+
+            <!-- Botones de Acción Rápida -->
+            <div class="flex flex-wrap items-center gap-3">
+                <a href="{{ url_for('result.print_report', code_or_id=result.code) }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 font-bold text-xs shadow-xs transition-all">
+                    <i class="fa-solid fa-print text-slate-500"></i> Imprimir / Guardar PDF
+                </a>
+                <a href="{{ url_for('test.start_test') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs shadow-md shadow-brand-600/20 transition-all">
+                    <i class="fa-solid fa-rotate-right"></i> Repetir Test
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+
+    <!-- 1. Tarjeta de Arquetipo Vocacional Dominante -->
+    <div class="bg-gradient-to-r from-brand-900 via-indigo-950 to-slate-900 rounded-3xl p-8 sm:p-10 text-white shadow-2xl relative overflow-hidden">
+        <div class="absolute -right-10 -bottom-10 opacity-10 text-white text-9xl pointer-events-none">
+            <i class="fa-solid fa-compass"></i>
+        </div>
+
+        <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div class="lg:col-span-8 space-y-4">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/20 border border-brand-400/30 text-brand-200 text-xs font-bold uppercase tracking-wider">
+                    <i class="fa-solid fa-sparkles"></i> Tu Personalidad Vocacional
+                </div>
+                <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white">
+                    {{ result.dominant_profile }}
+                </h2>
+                <p class="text-sm sm:text-base text-slate-300 leading-relaxed max-w-3xl">
+                    {{ result.dominant_profile_desc }}
+                </p>
+            </div>
+
+            <div class="lg:col-span-4 bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/15 space-y-3">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-brand-200">Dimensiones Holland Dominantes</h3>
+                <div class="space-y-2">
+                    {% for dim in result.riasec_scores.dominant_dims %}
+                    <div class="flex items-center justify-between p-2 rounded-xl bg-white/10">
+                        <span class="text-xs font-bold text-white">{{ riasec_names.get(dim, dim) }}</span>
+                        <span class="text-xs font-extrabold text-brand-300">{{ result.riasec_scores.percentages.get(dim, 0) }}%</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Gráficos de Perfil (Radar RIASEC + Barras de Habilidades) -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        <!-- Radar RIASEC -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-xs space-y-4 flex flex-col justify-between">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div>
+                    <h3 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
+                        <i class="fa-solid fa-chart-pie text-brand-600"></i> Modelo Holland (RIASEC)
+                    </h3>
+                    <p class="text-xs text-slate-500">Distribución de tus intereses y preferencias vocacionales</p>
+                </div>
+            </div>
+            
+            <div class="relative h-72 w-full">
+                <canvas id="riasecRadarChart"></canvas>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 text-xs text-slate-500 leading-relaxed">
+                El gráfico de radar muestra qué tan orientado estás hacia actividades <strong>Realistas</strong>, <strong>Investigativas</strong>, <strong>Artísticas</strong>, <strong>Sociales</strong>, <strong>Emprendedoras</strong> o <strong>Convencionales</strong>.
+            </div>
+        </div>
+
+        <!-- Barras de Habilidades -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-xs space-y-4 flex flex-col justify-between">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div>
+                    <h3 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
+                        <i class="fa-solid fa-brain text-accent-600"></i> Autopercepción de Habilidades
+                    </h3>
+                    <p class="text-xs text-slate-500">Tus talentos y aptitudes más destacadas</p>
+                </div>
+            </div>
+
+            <div class="relative h-72 w-full">
+                <canvas id="skillsBarChart"></canvas>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 text-xs text-slate-500 leading-relaxed">
+                Tus mayores fortalezas cognitivas y prácticas son el cimiento para rendir con éxito en el plan de estudios universitario.
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 3. Carreras con Mayor Afinidad (Top Recomendadas) -->
+    <div class="space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-brand-600">Recomendaciones Principales</span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mt-1">
+                    Top Carreras Universitarias Para Ti
+                </h2>
+                <p class="text-sm text-slate-600 mt-1">
+                    Ordenadas de mayor a menor según el índice de afinidad con tu perfil.
+                </p>
+            </div>
+            <a href="{{ url_for('main.compare_careers', c1=top_careers[0].id if top_careers else '', c2=top_careers[1].id if top_careers|length > 1 else '') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 hover:bg-brand-600 text-white font-bold text-xs transition-colors shadow-xs">
+                <i class="fa-solid fa-code-compare"></i> Comparar Mis 2 Mejores Opciones
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for career in top_careers %}
+            <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-sm hover-lift flex flex-col justify-between space-y-5 relative overflow-hidden">
+                
+                <!-- Match Badge -->
+                <div class="flex items-center justify-between">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold bg-slate-100 text-slate-700">
+                        <i class="{{ career.icon }} text-brand-600"></i>
+                        {{ career.category }}
+                    </span>
+
+                    <div class="flex items-center gap-1.5 px-3 py-1 rounded-xl font-extrabold text-xs
+                        {% if career.match_percentage >= 85 %} bg-emerald-100 text-emerald-800
+                        {% elif career.match_percentage >= 70 %} bg-indigo-100 text-indigo-800
+                        {% else %} bg-amber-100 text-amber-800 {% endif %}">
+                        <i class="fa-solid fa-bolt text-[10px]"></i>
+                        {{ career.match_percentage }}% Compatibilidad
+                    </div>
+                </div>
+
+                <!-- Info Principal -->
+                <div class="space-y-3">
+                    <h3 class="text-xl font-bold text-slate-900 hover:text-brand-600 transition-colors">
+                        <a href="{{ url_for('main.career_detail', slug=career.slug) }}">
+                            {{ career.name }}
+                        </a>
+                    </h3>
+                    <p class="text-xs text-slate-500 font-medium">
+                        <i class="fa-solid fa-award mr-1 text-slate-400"></i>{{ career.degree_title }}
+                    </p>
+                    <p class="text-xs text-slate-600 leading-relaxed line-clamp-3">
+                        {{ career.short_description }}
+                    </p>
+                </div>
+
+                <!-- Razones del Match -->
+                <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
+                    <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
+                        <i class="fa-solid fa-check text-emerald-500"></i> ¿Por qué encaja contigo?
+                    </div>
+                    <ul class="text-xs text-slate-600 space-y-1.5 list-disc list-inside">
+                        {% for r in career.match_reasons %}
+                        <li class="leading-tight">{{ r }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Acciones -->
+                <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                    <a href="{{ url_for('main.career_detail', slug=career.slug) }}" class="font-extrabold text-brand-600 hover:text-brand-700 flex items-center gap-1">
+                        Ver plan y salidas <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </a>
+                    <a href="{{ url_for('main.compare_careers', c1=career.id) }}" class="font-semibold text-slate-400 hover:text-slate-600">
+                        <i class="fa-solid fa-code-compare mr-1"></i>Comparar
+                    </a>
+                </div>
+
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- 4. Otras Carreras Alternativas para Explorar -->
+    {% if secondary_careers %}
+    <div class="bg-slate-50 rounded-3xl p-8 border border-slate-200/80 space-y-6">
+        <div>
+            <h3 class="text-lg font-bold text-slate-900">Otras Carreras Afines para Explorar</h3>
+            <p class="text-xs text-slate-500 mt-1">Opciones complementarias que también presentan compatibilidad con tus áreas secundarias.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for c in secondary_careers %}
+            <a href="{{ url_for('main.career_detail', slug=c.slug) }}" class="flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-200 hover:border-brand-500 hover:shadow-xs transition-all group">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-slate-100 group-hover:bg-brand-50 text-slate-600 group-hover:text-brand-600 flex items-center justify-center text-sm transition-colors">
+                        <i class="{{ c.icon }}"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-bold text-slate-800 group-hover:text-brand-600 transition-colors">{{ c.name }}</div>
+                        <div class="text-[10px] text-slate-400">{{ c.category }}</div>
+                    </div>
+                </div>
+                <span class="text-xs font-extrabold text-slate-600 bg-slate-100 px-2 py-1 rounded-lg">{{ c.match_percentage }}%</span>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- 5. Consejería Final para Bachilleres -->
+    <div class="bg-indigo-50/80 rounded-3xl p-8 border border-indigo-100 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="space-y-2">
+            <h3 class="text-lg font-bold text-indigo-950 flex items-center gap-2">
+                <i class="fa-solid fa-graduation-cap text-indigo-600"></i> ¿Qué hacer ahora con tus resultados?
+            </h3>
+            <p class="text-xs sm:text-sm text-indigo-800/90 leading-relaxed max-w-2xl">
+                1. Revisa las fichas de tus 3 carreras principales y sus materias.<br>
+                2. Imprime este reporte y compártelo con tus padres o el orientador escolar de tu colegio.<br>
+                3. Asiste a ferias universitarias o jornadas de puertas abiertas para conocer los campus.
+            </p>
+        </div>
+        <a href="{{ url_for('main.guide') }}" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md shadow-indigo-600/20 whitespace-nowrap transition-all">
+            <i class="fa-solid fa-book-open"></i> Leer Guía del Bachiller
+        </a>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const riasecData = {{ result.riasec_scores | tojson | safe }};
+        const skillsData = {{ result.skill_scores | tojson | safe }};
+        renderVocationalCharts(riasecData, skillsData);
+    });
+</script>
+{% endblock %}

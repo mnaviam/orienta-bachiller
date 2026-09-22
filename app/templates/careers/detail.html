@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block title %}{{ career.name }} | Guía Vocacional OrientaBachiller{% endblock %}
+
+{% block content %}
+<!-- Cabecera de la Carrera -->
+<div class="bg-mesh-gradient py-12 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="space-y-3">
+                <div class="flex items-center gap-2">
+                    <a href="{{ url_for('main.careers_list') }}" class="text-xs font-bold text-slate-500 hover:text-slate-800 flex items-center gap-1">
+                        <i class="fa-solid fa-arrow-left"></i> Catálogo
+                    </a>
+                    <span class="text-slate-300">•</span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-100 text-brand-700 text-xs font-extrabold">
+                        <i class="{{ career.icon }}"></i> {{ career.category }}
+                    </span>
+                </div>
+
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">
+                    {{ career.name }}
+                </h1>
+                
+                <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-slate-600 font-medium">
+                    <span><i class="fa-solid fa-award text-brand-600 mr-1.5"></i><strong>Título:</strong> {{ career.degree_title }}</span>
+                    <span><i class="fa-regular fa-clock text-brand-600 mr-1.5"></i><strong>Duración:</strong> {{ career.duration_semesters }} Semestres (~{{ career.duration_semesters // 2 }} años)</span>
+                </div>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="flex flex-wrap items-center gap-3">
+                <a href="{{ url_for('main.compare_careers', c1=career.id) }}" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 font-bold text-xs shadow-xs transition-all">
+                    <i class="fa-solid fa-code-compare text-slate-400"></i> Comparar Carrera
+                </a>
+                <a href="{{ url_for('test.start_test') }}" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs shadow-md shadow-brand-600/20 transition-all">
+                    <i class="fa-solid fa-play"></i> ¿Es para mí? Hacer Test
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        
+        <!-- Columna Principal -->
+        <div class="lg:col-span-8 space-y-10">
+            
+            <!-- Descripción General -->
+            <div class="bg-white rounded-3xl p-8 border border-slate-200/90 shadow-xs space-y-4">
+                <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-circle-info text-brand-600"></i> ¿De qué trata esta carrera?
+                </h2>
+                <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
+                    {{ career.full_description }}
+                </p>
+            </div>
+
+            <!-- Esta carrera es para ti si... -->
+            {% if career.reasons_to_study %}
+            <div class="bg-indigo-50/70 rounded-3xl p-8 border border-indigo-100 space-y-4">
+                <h2 class="text-xl font-bold text-indigo-950 flex items-center gap-2">
+                    <i class="fa-solid fa-circle-check text-indigo-600"></i> Esta carrera es ideal para ti si...
+                </h2>
+                <div class="grid grid-cols-1 gap-3 pt-2">
+                    {% for reason in career.reasons_to_study %}
+                    <div class="flex items-start gap-3 p-4 rounded-2xl bg-white border border-indigo-100 shadow-2xs">
+                        <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                            <i class="fa-solid fa-check"></i>
+                        </span>
+                        <p class="text-xs sm:text-sm text-slate-700 font-medium leading-snug">{{ reason }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Campo Laboral -->
+            {% if career.labor_market %}
+            <div class="bg-white rounded-3xl p-8 border border-slate-200/90 shadow-xs space-y-4">
+                <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-briefcase text-brand-600"></i> ¿Dónde podrás trabajar al graduarte?
+                </h2>
+                <p class="text-xs text-slate-500">Principales sectores y áreas de desempeño profesional para esta carrera:</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                    {% for job in career.labor_market %}
+                    <div class="flex items-center gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-100 text-xs font-semibold text-slate-700">
+                        <i class="fa-solid fa-building text-brand-500 text-sm"></i>
+                        <span>{{ job }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Materias y Plan de Estudios Típico -->
+            {% if career.typical_subjects %}
+            <div class="bg-white rounded-3xl p-8 border border-slate-200/90 shadow-xs space-y-4">
+                <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-book-bookmark text-brand-600"></i> Asignaturas y Materias Representativas
+                </h2>
+                <p class="text-xs text-slate-500">Ejemplos de materias clave que verás a lo largo de tus semestres universitarios:</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                    {% for sub in career.typical_subjects %}
+                    <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100 text-xs font-medium text-slate-800">
+                        <i class="fa-solid fa-graduation-cap text-indigo-500 text-xs"></i>
+                        <span>{{ sub }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+
+        <!-- Columna Lateral -->
+        <div class="lg:col-span-4 space-y-6">
+            
+            <!-- Habilidades Requeridas -->
+            {% if career.key_skills %}
+            <div class="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-xs space-y-4">
+                <h3 class="font-bold text-slate-900 text-sm uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                    <i class="fa-solid fa-bolt text-brand-600"></i> Habilidades Clave
+                </h3>
+                <div class="flex flex-wrap gap-2">
+                    {% for sk in career.key_skills %}
+                    <span class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-800 font-semibold text-xs border border-slate-200/80">
+                        {{ sk }}
+                    </span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Perfil RIASEC de la Carrera -->
+            <div class="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-xs space-y-4">
+                <h3 class="font-bold text-slate-900 text-sm uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                    <i class="fa-solid fa-chart-pie text-brand-600"></i> Enfoque Holland RIASEC
+                </h3>
+                <div class="space-y-2.5 text-xs">
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-600">Realista (Práctico / Técnico)</span>
+                        <strong class="text-slate-900">{{ (career.riasec_r * 100)|int }}%</strong>
+                    </div>
+                    <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                        <div class="bg-brand-600 h-1.5 rounded-full" style="width: {{ (career.riasec_r * 100)|int }}%;"></div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-1">
+                        <span class="text-slate-600">Investigativo (Ciencia / Análisis)</span>
+                        <strong class="text-slate-900">{{ (career.riasec_i * 100)|int }}%</strong>
+                    </div>
+                    <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                        <div class="bg-brand-600 h-1.5 rounded-full" style="width: {{ (career.riasec_i * 100)|int }}%;"></div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-1">
+                        <span class="text-slate-600">Artístico (Diseño / Creatividad)</span>
+                        <strong class="text-slate-900">{{ (career.riasec_a * 100)|int }}%</strong>
+                    </div>
+                    <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                        <div class="bg-brand-600 h-1.5 rounded-full" style="width: {{ (career.riasec_a * 100)|int }}%;"></div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-1">
+                        <span class="text-slate-600">Social (Servicio / Personas)</span>
+                        <strong class="text-slate-900">{{ (career.riasec_s * 100)|int }}%</strong>
+                    </div>
+                    <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                        <div class="bg-brand-600 h-1.5 rounded-full" style="width: {{ (career.riasec_s * 100)|int }}%;"></div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-1">
+                        <span class="text-slate-600">Emprendedor (Liderazgo / Negocios)</span>
+                        <strong class="text-slate-900">{{ (career.riasec_e * 100)|int }}%</strong>
+                    </div>
+                    <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                        <div class="bg-brand-600 h-1.5 rounded-full" style="width: {{ (career.riasec_e * 100)|int }}%;"></div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-1">
+                        <span class="text-slate-600">Convencional (Orden / Procesos)</span>
+                        <strong class="text-slate-900">{{ (career.riasec_c * 100)|int }}%</strong>
+                    </div>
+                    <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                        <div class="bg-brand-600 h-1.5 rounded-full" style="width: {{ (career.riasec_c * 100)|int }}%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carreras Relacionadas -->
+            {% if related %}
+            <div class="bg-slate-50 rounded-3xl p-6 border border-slate-200/80 space-y-4">
+                <h3 class="font-bold text-slate-900 text-xs uppercase tracking-wider text-slate-400">Carreras Relacionadas</h3>
+                <div class="space-y-2.5">
+                    {% for r in related %}
+                    <a href="{{ url_for('main.career_detail', slug=r.slug) }}" class="block p-3 rounded-xl bg-white border border-slate-200 hover:border-brand-500 text-xs font-bold text-slate-800 hover:text-brand-600 transition-all">
+                        {{ r.name }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}

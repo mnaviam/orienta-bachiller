@@ -1,0 +1,11 @@
+# Dependencias principales del Sistema OrientaBachiller
+Flask>=3.0.0,<3.2.0
+Werkzeug>=3.0.0
+Jinja2>=3.1.0
+click>=8.1.0
+itsdangerous>=2.2.0
+blinker>=1.9.0
+MarkupSafe>=3.0.0
+
+# Servidor WSGI para despliegue en producción (Render, Railway, Heroku, VPS, Docker)
+gunicorn>=21.2.0

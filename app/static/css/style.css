@@ -1,0 +1,49 @@
+/* Estilos complementarios y animaciones para OrientaBachiller */
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.35s ease-out forwards;
+}
+
+/* Efectos de tarjeta */
+.hover-lift {
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -10px rgba(79, 70, 229, 0.15);
+}
+
+/* Gradientes suaves */
+.bg-mesh-gradient {
+    background-color: #f8fafc;
+    background-image: 
+        radial-gradient(at 10% 20%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
+        radial-gradient(at 90% 10%, rgba(6, 182, 212, 0.08) 0px, transparent 50%),
+        radial-gradient(at 50% 80%, rgba(139, 92, 246, 0.06) 0px, transparent 50%);
+}
+
+/* Estilos de impresión para el informe vocacional */
+@media print {
+    header, footer, .no-print, #mobile-menu, button {
+        display: none !important;
+    }
+    body {
+        background: white !important;
+        color: black !important;
+        font-size: 12pt;
+    }
+    .print-card {
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: none !important;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+    .page-break {
+        page-break-before: always;
+    }
+}

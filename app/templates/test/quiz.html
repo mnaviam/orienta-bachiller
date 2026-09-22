@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+
+{% block title %}Cuestionario Vocacional | OrientaBachiller{% endblock %}
+
+{% block content %}
+<div class="bg-mesh-gradient py-6 border-b border-slate-200 sticky top-20 z-30 shadow-xs">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Encabezado y Progreso -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-3">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-brand-600 text-white flex items-center justify-center font-bold text-sm shadow-xs">
+                    <i class="fa-solid fa-list-check"></i>
+                </div>
+                <div>
+                    <h1 class="text-base font-extrabold text-slate-900">
+                        Cuestionario Vocacional: <span class="text-brand-600 font-semibold">{{ student_info.name }}</span>
+                    </h1>
+                    <span id="section-indicator" class="text-xs font-bold text-indigo-700 uppercase tracking-wider">
+                        Fase 1: Intereses y Preferencias (Holland RIASEC)
+                    </span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <span id="progress-text" class="text-xs font-bold text-slate-600">Pregunta 1 de {{ total_questions }}</span>
+                <span id="progress-badge" class="px-2.5 py-1 bg-brand-100 text-brand-700 text-xs font-extrabold rounded-lg">
+                    0%
+                </span>
+            </div>
+        </div>
+
+        <!-- Barra de Progreso Visual -->
+        <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden shadow-inner">
+            <div id="progress-bar" class="bg-gradient-to-r from-brand-500 via-indigo-500 to-accent-500 h-2.5 rounded-full transition-all duration-300 ease-out" style="width: 4%;"></div>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+    <form id="quiz-form" action="{{ url_for('test.process') }}" method="POST">
+        
+        <!-- Datos Ocultos del Estudiante -->
+        <input type="hidden" name="student_name" value="{{ student_info.name }}">
+        <input type="hidden" name="student_school" value="{{ student_info.school }}">
+        <input type="hidden" name="student_grade" value="{{ student_info.grade }}">
+        <input type="hidden" name="student_age" value="{{ student_info.age }}">
+        <input type="hidden" name="student_email" value="{{ student_info.email }}">
+
+        <!-- Contenedor de Preguntas (Cada una en una tarjeta controlada por JS) -->
+        <div id="questions-container" class="space-y-6">
+
+            <!-- SECCIÓN 1: INTERESES Y PREFERENCIAS -->
+            {% for q in interests_questions %}
+            <div class="question-step hidden bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-xl space-y-6"
+                 data-index="{{ loop.index }}"
+                 data-total="{{ total_questions }}"
+                 data-section="Intereses y Preferencias (Modelo RIASEC)"
+                 data-dimension="{{ q.dimension_name }}">
+                
+                <!-- Cabecera de la Pregunta -->
+                <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-xl text-xs font-extrabold bg-indigo-50 text-indigo-700 border border-indigo-100">
+                        <i class="{{ q.icon }}"></i> {{ q.dimension_name }}
+                    </span>
+                    <span class="text-xs font-bold text-slate-400">
+                        Pregunta {{ loop.index }} de {{ total_questions }}
+                    </span>
+                </div>
+
+                <!-- Texto de la Pregunta -->
+                <div class="space-y-2">
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-900 leading-snug">
+                        {{ q.text }}
+                    </h2>
+                    {% if q.subtitle %}
+                    <p class="text-xs sm:text-sm text-slate-500">
+                        <i class="fa-solid fa-circle-info text-brand-500 mr-1"></i> {{ q.subtitle }}
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- Opciones en Escala Likert (1 a 5) -->
+                <div class="space-y-3 pt-2">
+                    <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Selecciona tu nivel de identificación:</div>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-5 gap-2.5">
+                        
+                        <!-- Opción 1 -->
+                        <label class="likert-card flex sm:flex-col items-center justify-between sm:justify-center p-3.5 sm:p-4 rounded-2xl border-2 border-slate-200 hover:border-slate-400 cursor-pointer transition-all hover:bg-slate-50 text-center select-none group">
+                            <input type="radio" name="q_{{ q.id }}" value="1" class="sr-only" required>
+                            <span class="text-xl sm:text-2xl mb-1 group-hover:scale-110 transition-transform">❌</span>
+                            <span class="text-xs font-bold text-slate-700">1. Nada</span>
+                            <span class="text-[10px] text-slate-400 hidden sm:block">No me gusta</span>
+                        </label>
+
+                        <!-- Opción 2 -->
+                        <label class="likert-card flex sm:flex-col items-center justify-between sm:justify-center p-3.5 sm:p-4 rounded-2xl border-2 border-slate-200 hover:border-slate-400 cursor-pointer transition-all hover:bg-slate-50 text-center select-none group">
+                            <input type="radio" name="q_{{ q.id }}" value="2" class="sr-only">
+                            <span class="text-xl sm:text-2xl mb-1 group-hover:scale-110 transition-transform">😕</span>
+                            <span class="text-xs font-bold text-slate-700">2. Poco</span>
+                            <span class="text-[10px] text-slate-400 hidden sm:block">Rara vez</span>
+                        </label>
+
+                        <!-- Opción 3 -->
+                        <label class="likert-card flex sm:flex-col items-center justify-between sm:justify-center p-3.5 sm:p-4 rounded-2xl border-2 border-slate-200 hover:border-slate-400 cursor-pointer transition-all hover:bg-slate-50 text-center select-none group">
+                            <input type="radio" name="q_{{ q.id }}" value="3" class="sr-only">
+                            <span class="text-xl sm:text-2xl mb-1 group-hover:scale-110 transition-transform">😐</span>
+                            <span class="text-xs font-bold text-slate-700">3. Neutral</span>
+                            <span class="text-[10px] text-slate-400 hidden sm:block">Tal vez</span>
+                        </label>
+
+                        <!-- Opción 4 -->
+                        <label class="likert-card flex sm:flex-col items-center justify-between sm:justify-center p-3.5 sm:p-4 rounded-2xl border-2 border-slate-200 hover:border-slate-400 cursor-pointer transition-all hover:bg-slate-50 text-center select-none group">
+                            <input type="radio" name="q_{{ q.id }}" value="4" class="sr-only">
+                            <span class="text-xl sm:text-2xl mb-1 group-hover:scale-110 transition-transform">🙂</span>
+                            <span class="text-xs font-bold text-slate-700">4. Bastante</span>
+                            <span class="text-[10px] text-slate-400 hidden sm:block">Me gusta</span>
+                        </label>
+
+                        <!-- Opción 5 -->
+                        <label class="likert-card flex sm:flex-col items-center justify-between sm:justify-center p-3.5 sm:p-4 rounded-2xl border-2 border-slate-200 hover:border-slate-400 cursor-pointer transition-all hover:bg-slate-50 text-center select-none group">
+                            <input type="radio" name="q_{{ q.id }}" value="5" class="sr-only">
+                            <span class="text-xl sm:text-2xl mb-1 group-hover:scale-110 transition-transform">🔥</span>
+                            <span class="text-xs font-bold text-slate-700">5. Totalmente</span>
+                            <span class="text-[10px] text-slate-400 hidden sm:block">¡Me apasiona!</span>
+                        </label>
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            <!-- SECCIÓN 2: HABILIDADES Y APTITUDES -->
+            {% for q in skills_questions %}
+            {% set q_idx = loop.index + interests_questions|length %}
+            <div class="question-step hidden bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-xl space-y-6"
+                 data-index="{{ q_idx }}"
+                 data-total="{{ total_questions }}"
+                 data-section="Autoevaluación de Habilidades y Talentos"
+                 data-dimension="{{ q.dimension_name }}">
+                
+                <!-- Cabecera de la Pregunta -->
+                <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-xl text-xs font-extrabold bg-cyan-50 text-cyan-700 border border-cyan-100">
+                        <i class="{{ q.icon }}"></i> Aptitud: {{ q.dimension_name }}
+                    </span>
+                    <span class="text-xs font-bold text-slate-400">
+                        Pregunta {{ q_idx }} de {{ total_questions }}
+                    </span>
+                </div>
+
+                <!-- Texto de la Pregunta -->
+                <div class="space-y-2">
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-900 leading-snug">
+                        {{ q.text }}
+                    </h2>
+                    {% if q.subtitle %}
+                    <p class="text-xs sm:text-sm text-slate-500">
+                        <i class="fa-solid fa-circle-info text-cyan-500 mr-1"></i> {{ q.subtitle }}
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- Opciones en Escala Likert (1 a 5) -->
+                <div class="space-y-3 pt-2">
+                    <div class="text-xs font-bold uppercase tracking-wider text-slate-400">¿Qué tan desarrollada sientes esta habilidad en ti?</div>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-5 gap-2.5">
+                        
+                        <!-- Opción 1 -->
+                        <label class="likert-card flex sm:flex-col items-center justify-between sm:justify-center p-3.5 sm:p-4 rounded-2xl border-2 border-slate-200 hover:border-slate-400 cursor-pointer transition-all hover:bg-slate-50 text-center select-none group">
+                            <input type="radio" name="q_{{ q.id }}" value="1" class="sr-only" required>
+                            <span class="text-xl sm:text-2xl mb-1 group-hover:scale-110 transition-transform">⚡</span>
+                            <span class="text-xs font-bold text-slate-700">1. Muy Baja</span>
+                            <span class="text-[10px] text-slate-400 hidden sm:block">Me cuesta mucho</span>
+                        </label>
+
+                        <!-- Opción 2 -->
+                        <label class="likert-card flex sm:flex-col items-center justify-between sm:justify-center p-3.5 sm:p-4 rounded-2xl border-2 border-slate-200 hover:border-slate-400 cursor-pointer transition-all hover:bg-slate-50 text-center select-none group">
+                            <input type="radio" name="q_{{ q.id }}" value="2" class="sr-only">
+                            <span class="text-xl sm:text-2xl mb-1 group-hover:scale-110 transition-transform">📈</span>
+                            <span class="text-xs font-bold text-slate-700">2. Básica</span>
+                            <span class="text-[10px] text-slate-400 hidden sm:block">Poco habitual</span>
+                        </label>
+
+                        <!-- Opción 3 -->
+                        <label class="likert-card flex sm:flex-col items-center justify-between sm:justify-center p-3.5 sm:p-4 rounded-2xl border-2 border-slate-200 hover:border-slate-400 cursor-pointer transition-all hover:bg-slate-50 text-center select-none group">
+                            <input type="radio" name="q_{{ q.id }}" value="3" class="sr-only">
+                            <span class="text-xl sm:text-2xl mb-1 group-hover:scale-110 transition-transform">🎯</span>
+                            <span class="text-xs font-bold text-slate-700">3. Media</span>
+                            <span class="text-[10px] text-slate-400 hidden sm:block">Promedio</span>
+                        </label>
+
+                        <!-- Opción 4 -->
+                        <label class="likert-card flex sm:flex-col items-center justify-between sm:justify-center p-3.5 sm:p-4 rounded-2xl border-2 border-slate-200 hover:border-slate-400 cursor-pointer transition-all hover:bg-slate-50 text-center select-none group">
+                            <input type="radio" name="q_{{ q.id }}" value="4" class="sr-only">
+                            <span class="text-xl sm:text-2xl mb-1 group-hover:scale-110 transition-transform">⭐</span>
+                            <span class="text-xs font-bold text-slate-700">4. Alta</span>
+                            <span class="text-[10px] text-slate-400 hidden sm:block">Se me da bien</span>
+                        </label>
+
+                        <!-- Opción 5 -->
+                        <label class="likert-card flex sm:flex-col items-center justify-between sm:justify-center p-3.5 sm:p-4 rounded-2xl border-2 border-slate-200 hover:border-slate-400 cursor-pointer transition-all hover:bg-slate-50 text-center select-none group">
+                            <input type="radio" name="q_{{ q.id }}" value="5" class="sr-only">
+                            <span class="text-xl sm:text-2xl mb-1 group-hover:scale-110 transition-transform">🏆</span>
+                            <span class="text-xs font-bold text-slate-700">5. Sobresaliente</span>
+                            <span class="text-[10px] text-slate-400 hidden sm:block">¡Es mi fuerte!</span>
+                        </label>
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+
+        <!-- Botones de Navegación -->
+        <div class="mt-8 flex items-center justify-between gap-4">
+            <button type="button" id="prev-btn" class="hidden px-6 py-3.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-bold text-sm shadow-xs transition-all">
+                <i class="fa-solid fa-arrow-left mr-2"></i> Anterior
+            </button>
+
+            <div class="ml-auto flex items-center gap-3">
+                <button type="button" id="next-btn" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 text-white font-extrabold text-sm shadow-md shadow-brand-600/30 transition-all">
+                    <span>Siguiente Pregunta</span> <i class="fa-solid fa-arrow-right ml-2"></i>
+                </button>
+
+                <button type="submit" id="submit-btn" class="hidden px-8 py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-sm shadow-md shadow-emerald-600/30 transition-all animate-bounce">
+                    <i class="fa-solid fa-wand-magic-sparkles mr-2"></i> <span>Calcular Mis Resultados</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mapa visual de preguntas respondidas -->
+        <div class="mt-12 bg-white rounded-2xl p-4 border border-slate-200/80 shadow-xs">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center justify-between">
+                <span>Mapa de Preguntas</span>
+                <span id="answered-count">0 / {{ total_questions }} respondidas</span>
+            </div>
+            <div id="bubbles-container" class="flex flex-wrap gap-2">
+                <!-- Se llena dinámicamente con JS -->
+            </div>
+        </div>
+
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/quiz.js') }}"></script>
+{% endblock %}

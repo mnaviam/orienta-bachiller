@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block title %}Guía Vocacional para Bachilleres del Ecuador | OrientaBachiller{% endblock %}
+
+{% block content %}
+<div class="bg-mesh-gradient py-12 border-b border-slate-200">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 border border-brand-200 text-brand-700 text-xs font-bold uppercase tracking-wider">
+            <i class="fa-solid fa-graduation-cap"></i> Sistema Educativo del Ecuador (BGU y Educación Superior)
+        </div>
+        <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">Guía de Orientación Vocacional para Bachilleres</h1>
+        <p class="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto">
+            Desde 3.° de Bachillerato (BGU) hasta la postulación universitaria. Todo lo que necesitas saber para elegir tu carrera en las Universidades e Institutos del Ecuador.
+        </p>
+    </div>
+</div>
+
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-16">
+
+    <!-- 0. Sistema de Educación Superior en el Ecuador (LOES / CES / SENESCYT) -->
+    <div class="bg-white rounded-3xl p-8 sm:p-10 border border-slate-200/80 shadow-xs space-y-6">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-xl font-bold">
+                <i class="fa-solid fa-landmark"></i>
+            </div>
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900">Estructura de la Educación Superior en el Ecuador</h2>
+                <p class="text-sm text-slate-500">Niveles de formación según la Ley Orgánica de Educación Superior (LOES) y el CES</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+            
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-slate-400 uppercase">Nivel 1</span>
+                    <span class="px-2 py-0.5 rounded bg-brand-100 text-brand-700 text-[11px] font-bold">Secundaria</span>
+                </div>
+                <h3 class="text-base font-bold text-slate-900">Bachillerato (BGU / BT)</h3>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                    Culmina en 3.° de Bachillerato con la obtención del <strong>Título de Bachiller de la República</strong> (en Ciencias, Técnico o Internacional).
+                </p>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-indigo-50/70 border border-indigo-100 space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-indigo-400 uppercase">Tercer Nivel</span>
+                    <span class="px-2 py-0.5 rounded bg-indigo-100 text-indigo-700 text-[11px] font-bold">Grado</span>
+                </div>
+                <h3 class="text-base font-bold text-slate-900">Universidades y Politécnicas</h3>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                    Formación de 8 a 10 semestres (4 a 5 años; 12 semestres en Medicina). Títulos: <strong>Licenciatura, Ingeniería, Abogado, Médico Cirujano, Arquitecto</strong>.
+                </p>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-cyan-50/70 border border-cyan-100 space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-cyan-500 uppercase">Tercer Nivel</span>
+                    <span class="px-2 py-0.5 rounded bg-cyan-100 text-cyan-800 text-[11px] font-bold">Tecnológico</span>
+                </div>
+                <h3 class="text-base font-bold text-slate-900">Institutos Superiores (IST)</h3>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                    Carreras técnicas y tecnológicas de 4 a 6 periodos (2 a 3 años) con alta inserción laboral práctica y título de <strong>Tecnólogo Superior</strong>.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="p-4 rounded-2xl bg-amber-50/80 border border-amber-200 text-amber-900 text-xs flex items-center gap-3">
+            <i class="fa-solid fa-circle-info text-amber-600 text-base shrink-0"></i>
+            <span>
+                <strong>Importante para graduandos de BGU:</strong> Recuerda realizar el <em>Registro Nacional SENESCYT</em> obligatorio en cada periodo y consultar los cronogramas de admisión directa de las Universidades Públicas y Escuelas Politécnicas (EPN, ESPOL, ESPE, UCE, UG, UTPL, etc.).
+            </span>
+        </div>
+    </div>
+
+    <!-- 1. El Triángulo de la Elección de Carrera -->
+    <div class="bg-white rounded-3xl p-8 sm:p-10 border border-slate-200/80 shadow-xs space-y-6">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-brand-600 text-white flex items-center justify-center text-xl font-bold">
+                <i class="fa-solid fa-shapes"></i>
+            </div>
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900">1. El Triángulo de la Elección Vocacional</h2>
+                <p class="text-sm text-slate-500">Los tres pilares que toda buena decisión debe equilibrar</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+            <div class="p-5 rounded-2xl bg-indigo-50/70 border border-indigo-100 space-y-3">
+                <div class="text-indigo-700 font-extrabold text-lg flex items-center gap-2">
+                    <i class="fa-solid fa-heart"></i> Tus Intereses
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                    ¿Qué temas te despiertan curiosidad natural? ¿Qué actividades harías incluso si no te pagaran? La pasión es el combustible en los semestres difíciles.
+                </p>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-cyan-50/70 border border-cyan-100 space-y-3">
+                <div class="text-cyan-700 font-extrabold text-lg flex items-center gap-2">
+                    <i class="fa-solid fa-brain"></i> Tus Habilidades
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                    ¿En qué asignaturas del colegio destacas? Identifica si eres más lógico-matemático, verbal, artístico, técnico o investigativo.
+                </p>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-emerald-50/70 border border-emerald-100 space-y-3">
+                <div class="text-emerald-700 font-extrabold text-lg flex items-center gap-2">
+                    <i class="fa-solid fa-chart-line"></i> Realidad Laboral en Ecuador
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                    ¿Dónde trabajan los egresados? ¿Hay demanda en las provincias del país o en trabajo remoto internacional? ¿Qué estilos de vida permite esa profesión?
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Los 5 Errores Más Comunes al Elegir Carrera -->
+    <div class="bg-white rounded-3xl p-8 sm:p-10 border border-slate-200/80 shadow-xs space-y-6">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-rose-500 text-white flex items-center justify-center text-xl font-bold">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900">2. Los 5 Errores Más Comunes de los Bachilleres</h2>
+                <p class="text-sm text-slate-500">Evita estas trampas frecuentes al postular a la universidad</p>
+            </div>
+        </div>
+
+        <div class="space-y-4 pt-2">
+            <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-50 border border-slate-200/70">
+                <span class="w-6 h-6 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">1</span>
+                <div>
+                    <h4 class="text-sm font-bold text-slate-800">Elegir una carrera solo porque "da dinero"</h4>
+                    <p class="text-xs text-slate-600 mt-1">Si no tienes vocación ni destreza en esa área, el riesgo de deserción o frustración en los primeros semestres universitarios es muy alto.</p>
+                </div>
+            </div>
+
+            <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-50 border border-slate-200/70">
+                <span class="w-6 h-6 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">2</span>
+                <div>
+                    <h4 class="text-sm font-bold text-slate-800">Estudiar lo mismo que tus compañeros del colegio</h4>
+                    <p class="text-xs text-slate-600 mt-1">La universidad es una etapa de autonomía e identidad propia. Cada bachiller tiene fortalezas y aspiraciones individuales.</p>
+                </div>
+            </div>
+
+            <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-50 border border-slate-200/70">
+                <span class="w-6 h-6 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">3</span>
+                <div>
+                    <h4 class="text-sm font-bold text-slate-800">Guiarse únicamente por series o estereotipos</h4>
+                    <p class="text-xs text-slate-600 mt-1">Las series sobre medicina, leyes o criminalística exageran la realidad. Revisa planes de estudio y habla con profesionales reales.</p>
+                </div>
+            </div>
+
+            <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-50 border border-slate-200/70">
+                <span class="w-6 h-6 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">4</span>
+                <div>
+                    <h4 class="text-sm font-bold text-slate-800">No revisar la malla curricular aprobada por el CES</h4>
+                    <p class="text-xs text-slate-600 mt-1">Antes de postularte a una universidad ecuatoriana, revisa materia por materia cada semestre para asegurarte de que te guste el contenido real.</p>
+                </div>
+            </div>
+
+            <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-50 border border-slate-200/70">
+                <span class="w-6 h-6 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">5</span>
+                <div>
+                    <h4 class="text-sm font-bold text-slate-800">No apoyarse en el Departamento de Consejería Estudiantil (DECE)</h4>
+                    <p class="text-xs text-slate-600 mt-1">El equipo DECE de tu Unidad Educativa está capacitado para orientar tus dudas vocacionales y revisar contigo tu informe de resultados.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="text-center bg-gradient-to-r from-brand-600 to-indigo-600 text-white rounded-3xl p-10 space-y-6 shadow-xl">
+        <h3 class="text-2xl sm:text-3xl font-bold">¿Listo para conocer tu perfil vocacional?</h3>
+        <p class="text-sm sm:text-base text-brand-100 max-w-xl mx-auto">
+            Responde nuestro cuestionario psicométrico para bachilleres de Ecuador y obtén tu informe personalizado con recomendaciones de carreras de Tercer Nivel en 5 minutos.
+        </p>
+        <div>
+            <a href="{{ url_for('test.start_test') }}" class="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-white text-brand-700 hover:bg-brand-50 font-extrabold text-sm shadow-md transition-all">
+                <i class="fa-solid fa-play"></i> Iniciar Test Vocacional
+            </a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
