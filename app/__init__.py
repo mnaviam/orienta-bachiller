@@ -2,11 +2,11 @@ import os
 import sys
 
 # Asegurar carga de librerías locales
-_current_dir = os.path.dirname(os.path.abspath(__file__))
-_root_dir = os.path.dirname(_current_dir)
-_lib_dir = os.path.join(_root_dir, 'lib')
-if os.path.exists(_lib_dir) and _lib_dir not in sys.path:
-    sys.path.insert(0, _lib_dir)
+#_current_dir = os.path.dirname(os.path.abspath(__file__))
+#_root_dir = os.path.dirname(_current_dir)
+#_lib_dir = os.path.join(_root_dir, 'lib')
+#if os.path.exists(_lib_dir) and _lib_dir not in sys.path:
+#    sys.path.insert(0, _lib_dir)
 
 from flask import Flask
 from config import Config
