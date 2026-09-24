@@ -13,7 +13,7 @@ from config import Config
 from app.models.database import init_db
 
 def create_app(config_class=Config):
-    base_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+    base_dir = os.path.abspath(os.path.dirname(__file__))
     
     app = Flask(
         __name__,
