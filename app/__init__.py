@@ -15,13 +15,13 @@ from app.models.database import init_db
 def create_app(config_class=Config):
     base_dir = os.path.abspath(os.path.dirname(__file__))
     
-    app = Flask(
-        __name__,
-        template_folder=os.path.join(base_dir, 'templates'),
-        static_folder=os.path.join(base_dir, 'static')
-    )
+#    app = Flask(
+#        __name__,
+#        template_folder=os.path.join(base_dir, 'templates'),
+#        static_folder=os.path.join(base_dir, 'static')
+#    )
     
-#    app = Flask(__name__)
+    app = Flask(__name__)
     app.config.from_object(config_class)
 
     # Inicializar Base de Datos con tablas y datos semilla
