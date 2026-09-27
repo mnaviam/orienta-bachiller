@@ -22,7 +22,7 @@ def init_db():
     # Tabla de Carreras
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS careers (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
         name TEXT NOT NULL,
         slug TEXT UNIQUE NOT NULL,
         category TEXT NOT NULL,
@@ -53,7 +53,7 @@ def init_db():
     # Tabla de Preguntas del Test
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS questions (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
         section TEXT NOT NULL, -- 'interests' o 'skills'
         dimension TEXT NOT NULL, -- 'R','I','A','S','E','C' o 'logic_math','verbal', etc.
         dimension_name TEXT NOT NULL,
@@ -67,7 +67,7 @@ def init_db():
     # Tabla de Resultados de Tests
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS test_results (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
         code TEXT UNIQUE NOT NULL,
         student_name TEXT NOT NULL,
         student_school TEXT,
