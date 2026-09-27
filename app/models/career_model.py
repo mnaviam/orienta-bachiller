@@ -25,11 +25,11 @@ class Career:
         params = []
 
         if category and category != 'all':
-            query += " AND category = ?"
+            query += " AND category = %s"
             params.append(category)
 
         if search_term:
-            query += " AND (name LIKE ? OR short_description LIKE ? OR category LIKE ?)"
+            query += " AND (name LIKE %s OR short_description LIKE %s OR category LIKE %s)"
             term = f"%{search_term}%"
             params.extend([term, term, term])
 
@@ -41,14 +41,14 @@ class Career:
     @classmethod
     def get_by_id(cls, career_id):
         conn = get_db_connection()
-        row = conn.execute("SELECT * FROM careers WHERE id = ?", (career_id,)).fetchone()
+        row = conn.execute("SELECT * FROM careers WHERE id = %s", (career_id,)).fetchone()
         conn.close()
         return cls._parse_row(row)
 
     @classmethod
     def get_by_slug(cls, slug):
         conn = get_db_connection()
-        row = conn.execute("SELECT * FROM careers WHERE slug = ?", (slug,)).fetchone()
+        row = conn.execute("SELECT * FROM careers WHERE slug = %s", (slug,)).fetchone()
         conn.close()
         return cls._parse_row(row)
 
@@ -64,7 +64,7 @@ class Career:
         if not ids:
             return []
         conn = get_db_connection()
-        placeholders = ','.join('?' for _ in ids)
+        placeholders = ','.join('%s' for _ in ids)
         rows = conn.execute(f"SELECT * FROM careers WHERE id IN ({placeholders})", ids).fetchall()
         conn.close()
         careers_dict = {r['id']: cls._parse_row(r) for r in rows}
