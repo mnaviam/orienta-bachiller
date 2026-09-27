@@ -1,6 +1,6 @@
 import json
 from app.models.database import get_db_connection
-from psycopg2.extras import DictCursor
+from psycopg2.extras import RealDictCursor
 
 class Career:
     """Modelo para representar y consultar las Carreras Universitarias."""
@@ -36,7 +36,7 @@ class Career:
 
         query += " ORDER BY name ASC"
         #rows = conn.execute(query, params).fetchall()
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute(query, params)
         rows = cursor.fetchall()
         conn.close()
@@ -66,7 +66,7 @@ class Career:
     def get_categories(cls):
         conn = get_db_connection()
         #rows = conn.execute("SELECT DISTINCT category FROM careers ORDER BY category ASC").fetchall()
-        cursor = conn.cursor(cursor_factory=DictCursor)
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute("SELECT DISTINCT category FROM careers ORDER BY category ASC")
         rows = cursor.fetchall()
         conn.close()
