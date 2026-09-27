@@ -1,5 +1,6 @@
 import json
 from app.models.database import get_db_connection
+from psycopg2.extras import DictCursor
 
 class Career:
     """Modelo para representar y consultar las Carreras Universitarias."""
