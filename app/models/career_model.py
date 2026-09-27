@@ -70,7 +70,8 @@ class Career:
         cursor.execute("SELECT DISTINCT category FROM careers ORDER BY category ASC")
         rows = cursor.fetchall()
         conn.close()
-        return [r['category'] for r in rows]
+        #return [r['category'] for r in rows]
+        return [r[0] for r in rows]
 
     @classmethod
     def get_multiple_by_ids(cls, ids):
