@@ -3,6 +3,7 @@ import json
 import os
 import psycopg2
 from config import Config
+from psycopg2.extras import DictCursor
 
 def get_db_connection():
     """Crea y retorna una conexión a la base de datos SQLite con soporte para nombres de columna."""
@@ -17,7 +18,8 @@ def get_db_connection():
 def init_db():
     """Inicializa la estructura de la base de datos e inserta los datos iniciales si no existen."""
     conn = get_db_connection()
-    cursor = conn.cursor()
+    #cursor = conn.cursor()
+    cursor = conn.cursor(cursor_factory=DictCursor)
 
     # Tabla de Carreras
     cursor.execute('''
