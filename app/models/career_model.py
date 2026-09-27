@@ -65,7 +65,7 @@ class Career:
     def get_categories(cls):
         conn = get_db_connection()
         #rows = conn.execute("SELECT DISTINCT category FROM careers ORDER BY category ASC").fetchall()
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=DictCursor)
         cursor.execute("SELECT DISTINCT category FROM careers ORDER BY category ASC")
         rows = cursor.fetchall()
         conn.close()
