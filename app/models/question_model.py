@@ -1,4 +1,5 @@
 from app.models.database import get_db_connection
+from psycopg2.extras import RealDictCursor
 
 class Question:
     """Modelo para representar y consultar las preguntas del Cuestionario Vocacional."""
@@ -7,7 +8,7 @@ class Question:
     def get_all(cls):
         conn = get_db_connection()
         #rows = conn.execute("SELECT * FROM questions ORDER BY order_num ASC").fetchall()
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute("SELECT * FROM questions ORDER BY order_num ASC")
         rows = cursor.fetchall()
         conn.close()
@@ -17,7 +18,7 @@ class Question:
     def get_by_section(cls, section):
         conn = get_db_connection()
         #rows = conn.execute("SELECT * FROM questions WHERE section = %s ORDER BY order_num ASC", (section,)).fetchall()
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute("SELECT * FROM questions WHERE section = %s ORDER BY order_num ASC", (section,))
         rows = cursor.fetchall()
         conn.close()
@@ -27,7 +28,7 @@ class Question:
     def get_grouped_by_section(cls):
         conn = get_db_connection()
         #rows = conn.execute("SELECT * FROM questions ORDER BY section DESC, order_num ASC").fetchall()
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute("SELECT * FROM questions ORDER BY section DESC, order_num ASC")
         rows = cursor.fetchall()
         conn.close()
