@@ -34,28 +34,40 @@ class Career:
             params.extend([term, term, term])
 
         query += " ORDER BY name ASC"
-        rows = conn.execute(query, params).fetchall()
+        #rows = conn.execute(query, params).fetchall()
+        cursor = conn.cursor()
+        cursor.execute(query, params)
+        rows = cursor.fetchall()
         conn.close()
         return [cls._parse_row(r) for r in rows]
 
     @classmethod
     def get_by_id(cls, career_id):
         conn = get_db_connection()
-        row = conn.execute("SELECT * FROM careers WHERE id = %s", (career_id,)).fetchone()
+        #row = conn.execute("SELECT * FROM careers WHERE id = %s", (career_id,)).fetchone()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM careers WHERE id = %s", (career_id,))
+        row = cursor.fetchone()
         conn.close()
         return cls._parse_row(row)
 
     @classmethod
     def get_by_slug(cls, slug):
         conn = get_db_connection()
-        row = conn.execute("SELECT * FROM careers WHERE slug = %s", (slug,)).fetchone()
+        #row = conn.execute("SELECT * FROM careers WHERE slug = %s", (slug,)).fetchone()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM careers WHERE slug = %s", (slug,))
+        row = cursor.fetchone()
         conn.close()
         return cls._parse_row(row)
 
     @classmethod
     def get_categories(cls):
         conn = get_db_connection()
-        rows = conn.execute("SELECT DISTINCT category FROM careers ORDER BY category ASC").fetchall()
+        #rows = conn.execute("SELECT DISTINCT category FROM careers ORDER BY category ASC").fetchall()
+        cursor = conn.cursor()
+        cursor.execute("SELECT DISTINCT category FROM careers ORDER BY category ASC")
+        rows = cursor.fetchall()
         conn.close()
         return [r['category'] for r in rows]
 
@@ -65,7 +77,10 @@ class Career:
             return []
         conn = get_db_connection()
         placeholders = ','.join('%s' for _ in ids)
-        rows = conn.execute(f"SELECT * FROM careers WHERE id IN ({placeholders})", ids).fetchall()
+        #rows = conn.execute(f"SELECT * FROM careers WHERE id IN ({placeholders})", ids).fetchall()
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT * FROM careers WHERE id IN ({placeholders})", ids)
+        rows = cursor.fetchall()
         conn.close()
         careers_dict = {r['id']: cls._parse_row(r) for r in rows}
         return [careers_dict[cid] for cid in ids if cid in careers_dict]
