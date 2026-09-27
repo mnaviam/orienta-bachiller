@@ -46,7 +46,7 @@ class Career:
     def get_by_id(cls, career_id):
         conn = get_db_connection()
         #row = conn.execute("SELECT * FROM careers WHERE id = %s", (career_id,)).fetchone()
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute("SELECT * FROM careers WHERE id = %s", (career_id,))
         row = cursor.fetchone()
         conn.close()
@@ -56,7 +56,7 @@ class Career:
     def get_by_slug(cls, slug):
         conn = get_db_connection()
         #row = conn.execute("SELECT * FROM careers WHERE slug = %s", (slug,)).fetchone()
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute("SELECT * FROM careers WHERE slug = %s", (slug,))
         row = cursor.fetchone()
         conn.close()
@@ -80,7 +80,7 @@ class Career:
         conn = get_db_connection()
         placeholders = ','.join('%s' for _ in ids)
         #rows = conn.execute(f"SELECT * FROM careers WHERE id IN ({placeholders})", ids).fetchall()
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute(f"SELECT * FROM careers WHERE id IN ({placeholders})", ids)
         rows = cursor.fetchall()
         conn.close()
