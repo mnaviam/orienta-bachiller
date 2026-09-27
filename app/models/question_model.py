@@ -6,21 +6,30 @@ class Question:
     @classmethod
     def get_all(cls):
         conn = get_db_connection()
-        rows = conn.execute("SELECT * FROM questions ORDER BY order_num ASC").fetchall()
+        #rows = conn.execute("SELECT * FROM questions ORDER BY order_num ASC").fetchall()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM questions ORDER BY order_num ASC")
+        rows = cursor.fetchall()
         conn.close()
         return [dict(r) for r in rows]
 
     @classmethod
     def get_by_section(cls, section):
         conn = get_db_connection()
-        rows = conn.execute("SELECT * FROM questions WHERE section = %s ORDER BY order_num ASC", (section,)).fetchall()
+        #rows = conn.execute("SELECT * FROM questions WHERE section = %s ORDER BY order_num ASC", (section,)).fetchall()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM questions WHERE section = %s ORDER BY order_num ASC", (section,))
+        rows = cursor.fetchall()
         conn.close()
         return [dict(r) for r in rows]
 
     @classmethod
     def get_grouped_by_section(cls):
         conn = get_db_connection()
-        rows = conn.execute("SELECT * FROM questions ORDER BY section DESC, order_num ASC").fetchall()
+        #rows = conn.execute("SELECT * FROM questions ORDER BY section DESC, order_num ASC").fetchall()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM questions ORDER BY section DESC, order_num ASC")
+        rows = cursor.fetchall()
         conn.close()
         
         grouped = {
