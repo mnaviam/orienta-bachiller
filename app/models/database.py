@@ -784,12 +784,12 @@ def seed_careers(conn):
             skill_spatial_creative, skill_social_leadership, skill_technical_manual,
             skill_scientific_research
         ) VALUES (
-            :name, :slug, :category, :icon, :short_description, :full_description,
-            :duration_semesters, :degree_title, :labor_market, :key_skills,
-            :typical_subjects, :reasons_to_study, :riasec_r, :riasec_i, :riasec_a,
-            :riasec_s, :riasec_e, :riasec_c, :skill_logic_math, :skill_verbal,
-            :skill_spatial_creative, :skill_social_leadership, :skill_technical_manual,
-            :skill_scientific_research
+            %(name)s, %(slug)s, %(category)s, %(icon)s, %(short_description)s, %(full_description)s,
+            %(duration_semesters)s, %(degree_title)s, %(labor_market)s, %(key_skills)s,
+            %(typical_subjects)s, %(reasons_to_study)s, %(riasec_r)s, %(riasec_i)s, %(riasec_a)s,
+            %(riasec_s)s, %(riasec_e)s, %(riasec_c)s, %(skill_logic_math)s, %(skill_verbal)s,
+            %(skill_spatial_creative)s, %(skill_social_leadership)s, %(skill_technical_manual)s,
+            %(skill_scientific_research)s
         )
         ''', c)
     conn.commit()
