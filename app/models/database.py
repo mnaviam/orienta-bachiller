@@ -1,14 +1,17 @@
-import sqlite3
+#import sqlite3
 import json
 import os
+import psycopg2
 from config import Config
 
 def get_db_connection():
     """Crea y retorna una conexión a la base de datos SQLite con soporte para nombres de columna."""
-    db_path = Config.DATABASE_PATH
-    os.makedirs(os.path.dirname(db_path), exist_ok=True)
-    conn = sqlite3.connect(db_path)
-    conn.row_factory = sqlite3.Row
+    #db_path = Config.DATABASE_PATH
+    #os.makedirs(os.path.dirname(db_path), exist_ok=True)
+    #conn = sqlite3.connect(db_path)
+    #conn.row_factory = sqlite3.Row
+    db_url = os.environ.get('DATABASE_URL')
+    conn = psycopg2.connect(db_url)
     return conn
 
 def init_db():
@@ -260,7 +263,7 @@ def seed_questions(conn):
 
     cursor.executemany('''
     INSERT INTO questions (section, dimension, dimension_name, text, subtitle, icon, order_num)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
+    VALUES (%s, %s, %s, %s, %s, %s, %s)
     ''', questions)
     conn.commit()
 
