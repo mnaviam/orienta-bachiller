@@ -2,6 +2,7 @@ import json
 import uuid
 from datetime import datetime
 from app.models.database import get_db_connection
+from psycopg2.extras import RealDictCursor
 
 class TestResult:
     """Modelo para guardar y consultar los resultados de tests vocacionales."""
@@ -26,7 +27,7 @@ class TestResult:
     def save(cls, student_data, riasec_scores, skill_scores, dominant_profile, dominant_profile_desc, recommended_careers, raw_answers):
         code = str(uuid.uuid4())[:8].upper()
         conn = get_db_connection()
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
 
         cursor.execute('''
         INSERT INTO test_results (
@@ -56,7 +57,7 @@ class TestResult:
     def get_by_code(cls, code):
         conn = get_db_connection()
         #row = conn.execute("SELECT * FROM test_results WHERE code = %s", (code,)).fetchone()
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute("SELECT * FROM test_results WHERE code = %s", (code,))
         row = cursor.fetchone()
         conn.close()
@@ -66,7 +67,7 @@ class TestResult:
     def get_recent(cls, limit=10):
         conn = get_db_connection()
         #rows = conn.execute("SELECT * FROM test_results ORDER BY created_at DESC LIMIT %s", (limit,)).fetchall()
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute("SELECT * FROM test_results ORDER BY created_at DESC LIMIT %s", (limit,))
         rows = cursor.fetchall()
         conn.close()
@@ -76,7 +77,7 @@ class TestResult:
     def get_stats(cls):
         conn = get_db_connection()
         #total_tests = conn.execute("SELECT COUNT(*) as count FROM test_results").fetchone()['count']
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute("SELECT COUNT(*) as count FROM test_results")
         total_tests = cursor.fetchone()['count']
         
