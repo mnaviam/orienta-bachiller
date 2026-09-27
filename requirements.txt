@@ -6,6 +6,7 @@ click>=8.1.0
 itsdangerous>=2.2.0
 blinker>=1.9.0
 MarkupSafe>=3.0.0
+psycopg2-binary>=2.9.9
 
 # Servidor WSGI para despliegue en producción (Render, Railway, Heroku, VPS, Docker)
 gunicorn>=21.2.0
