@@ -55,38 +55,62 @@ class TestResult:
     @classmethod
     def get_by_code(cls, code):
         conn = get_db_connection()
-        row = conn.execute("SELECT * FROM test_results WHERE code = %s", (code,)).fetchone()
+        #row = conn.execute("SELECT * FROM test_results WHERE code = %s", (code,)).fetchone()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM test_results WHERE code = %s", (code,))
+        row = cursor.fetchone()
         conn.close()
         return cls._parse_row(row)
 
     @classmethod
     def get_recent(cls, limit=10):
         conn = get_db_connection()
-        rows = conn.execute("SELECT * FROM test_results ORDER BY created_at DESC LIMIT %s", (limit,)).fetchall()
+        #rows = conn.execute("SELECT * FROM test_results ORDER BY created_at DESC LIMIT %s", (limit,)).fetchall()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM test_results ORDER BY created_at DESC LIMIT %s", (limit,))
+        rows = cursor.fetchall()
         conn.close()
         return [cls._parse_row(r) for r in rows]
 
     @classmethod
     def get_stats(cls):
         conn = get_db_connection()
-        total_tests = conn.execute("SELECT COUNT(*) as count FROM test_results").fetchone()['count']
+        #total_tests = conn.execute("SELECT COUNT(*) as count FROM test_results").fetchone()['count']
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) as count FROM test_results")
+        total_tests = cursor.fetchone()['count']
         
         # Conteo por perfil dominante
-        profiles = conn.execute('''
+        #profiles = conn.execute('''
+        #    SELECT dominant_profile, COUNT(*) as count 
+        #    FROM test_results 
+        #    GROUP BY dominant_profile 
+        #    ORDER BY count DESC
+        #''').fetchall()
+        cursor.execute('''
             SELECT dominant_profile, COUNT(*) as count 
             FROM test_results 
             GROUP BY dominant_profile 
             ORDER BY count DESC
-        ''').fetchall()
+        ''')
+        profiles = cursor.fetchall()
         
         # Conteo de escuelas
-        schools = conn.execute('''
+        #schools = conn.execute('''
+        #    SELECT student_school, COUNT(*) as count 
+        #    FROM test_results 
+        #    WHERE student_school IS NOT NULL AND student_school != ''
+        #    GROUP BY student_school 
+        #    ORDER BY count DESC LIMIT 5
+        #''').fetchall()
+        cursor.execute('''
             SELECT student_school, COUNT(*) as count 
             FROM test_results 
             WHERE student_school IS NOT NULL AND student_school != ''
             GROUP BY student_school 
             ORDER BY count DESC LIMIT 5
-        ''').fetchall()
+        ''')
+        schools = cursor.fetchall()
 
         conn.close()
         return {
