@@ -19,7 +19,7 @@ def init_db():
     """Inicializa la estructura de la base de datos e inserta los datos iniciales si no existen."""
     conn = get_db_connection()
     #cursor = conn.cursor()
-    cursor = conn.cursor(cursor_factory=DictCursor)
+    cursor = conn.cursor(cursor_factory=DictCursor) 
 
     # Tabla de Carreras
     cursor.execute('''
