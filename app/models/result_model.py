@@ -33,7 +33,7 @@ class TestResult:
             code, student_name, student_school, student_grade, student_email, student_age,
             riasec_scores_json, skill_scores_json, dominant_profile, dominant_profile_desc,
             recommended_careers_json, answers_json
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         ''', (
             code,
             student_data.get('name', 'Estudiante Bachiller'),
@@ -55,14 +55,14 @@ class TestResult:
     @classmethod
     def get_by_code(cls, code):
         conn = get_db_connection()
-        row = conn.execute("SELECT * FROM test_results WHERE code = ?", (code,)).fetchone()
+        row = conn.execute("SELECT * FROM test_results WHERE code = %s", (code,)).fetchone()
         conn.close()
         return cls._parse_row(row)
 
     @classmethod
     def get_recent(cls, limit=10):
         conn = get_db_connection()
-        rows = conn.execute("SELECT * FROM test_results ORDER BY created_at DESC LIMIT ?", (limit,)).fetchall()
+        rows = conn.execute("SELECT * FROM test_results ORDER BY created_at DESC LIMIT %s", (limit,)).fetchall()
         conn.close()
         return [cls._parse_row(r) for r in rows]
 
