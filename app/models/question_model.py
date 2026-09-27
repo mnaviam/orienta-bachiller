@@ -13,7 +13,7 @@ class Question:
     @classmethod
     def get_by_section(cls, section):
         conn = get_db_connection()
-        rows = conn.execute("SELECT * FROM questions WHERE section = ? ORDER BY order_num ASC", (section,)).fetchall()
+        rows = conn.execute("SELECT * FROM questions WHERE section = %s ORDER BY order_num ASC", (section,)).fetchall()
         conn.close()
         return [dict(r) for r in rows]
 
