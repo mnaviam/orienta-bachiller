@@ -139,7 +139,7 @@
                                 {{ t.dominant_profile }}
                             </span>
                         </td>
-                        <td class="py-3.5 text-slate-400">{{ t.created_at[:16] }}</td>
+                       <td class="py-3.5 text-slate-400">{{ t.created_at.strftime('%Y-%m-%d %H:%M') if t.created_at else '' }}</td>
                         <td class="py-3.5 text-right">
                             <a href="{{ url_for('result.view_result', code_or_id=t.code) }}" class="inline-flex items-center gap-1 font-bold text-brand-600 hover:text-brand-700">
                                 Ver Informe <i class="fa-solid fa-chevron-right text-[10px]"></i>
